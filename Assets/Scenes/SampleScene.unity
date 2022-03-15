@@ -308,7 +308,7 @@ MonoBehaviour:
   Osprite: {fileID: 3994808129258507290, guid: e05e8248aedd7dc499a2dbdbdc37e65e, type: 3}
   ButtonPrefab: {fileID: 1909798057030770531, guid: ab5a13c07d184004498c3900975d1c47, type: 3}
   isPlayerTurn: 0
-  difficulty: 3
+  difficulty: 5
 --- !u!114 &2147039070
 MonoBehaviour:
   m_ObjectHideFlags: 0
