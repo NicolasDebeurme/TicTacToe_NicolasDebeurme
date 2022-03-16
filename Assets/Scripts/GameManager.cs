@@ -19,7 +19,7 @@ public class GameManager : MonoBehaviour
 
     Text ButtonText;
 
-    public int difficulty = 3;
+    public int difficulty = 10;
 
     private void Awake()
     {
@@ -41,8 +41,7 @@ public class GameManager : MonoBehaviour
         {
             makeAiMove();
         }
-
-            
+ 
     }
 
     void GenerateGrid()
@@ -121,6 +120,7 @@ public class GameManager : MonoBehaviour
 
     public void makeAiMove()
     {
+        isPlayerTurn = true;
         int bestVal = -11;
         int bestMove= -1;
         char[] newBoard = new char[9];
@@ -139,7 +139,7 @@ public class GameManager : MonoBehaviour
             {
                 newBoard[i] = 'O';
                 int value = Minimax(newBoard, difficulty, false);
-
+                //Debug.Log(value);
                 if (value > bestVal)
                 {
                     bestVal = value;
@@ -154,7 +154,7 @@ public class GameManager : MonoBehaviour
         if(CheckWin("O"))
             Debug.Log("Bot Win");
 
-        isPlayerTurn = !isPlayerTurn;
+        
     }
 
     private void setValue(int bestMove, char v)
@@ -174,8 +174,12 @@ public class GameManager : MonoBehaviour
     int Minimax(char[] board,  int depth , bool maximizingPlayer)
     {
         int score = scoreBoard(board, depth);
+        //Debug.Log(score+"-"+ isTerminating(board)+"-"+ depth);
         if (depth == 0 || isTerminating(board) || score != 0)
+        {
+            Debug.Log(score);
             return score;
+        }
         if (maximizingPlayer)
         {
             int value = -10;
@@ -186,7 +190,6 @@ public class GameManager : MonoBehaviour
                     board[i] = 'O';
 
                     value = Math.Max(value, Minimax(board, depth - 1, false));
-                    Debug.Log("O:" + value.ToString());
                     board[i] = ' ';
                 }
             }
@@ -201,7 +204,6 @@ public class GameManager : MonoBehaviour
                 {
                     board[i] = 'X';
                     value = Math.Min(value, Minimax(board, depth - 1, true));
-                    Debug.Log("X:" + value.ToString());
                     board[i] = ' ';
                 }
             }
@@ -213,17 +215,21 @@ public class GameManager : MonoBehaviour
     int scoreBoard(char[] board, int depth)
     {
         string currentPlayer = "O";
-        for (int i = 0; i < 4; i++)
+        for(int j = 0; j < 2; j++)
         {
-            if (CheckArrayWin(board,char.Parse(currentPlayer)).Length == 3)
+            for (int i = 0; i < 4; i++)
             {
-                if (currentPlayer == "O")
-                    return 10 - (difficulty - depth);
-                else
-                    return -10 + (difficulty - depth);
+                if (CheckArrayWin(board, char.Parse(currentPlayer)))
+                {
+                    if (currentPlayer == "O")
+                        return 10 - (difficulty - depth);
+                    else
+                        return -10 + (difficulty - depth);
+                }
             }
             currentPlayer = "X";
         }
+        
         return 0;
     }
 
@@ -237,9 +243,8 @@ public class GameManager : MonoBehaviour
         return true;
     }
 
-    int[] CheckArrayWin(char[] board , char player )
+    bool CheckArrayWin(char[] board , char player )
     {
-        int[] winsequence = new int[3];
         int[,] PosToCheck = new int[,]{ { 0, 1, 2 }, { 3, 4 ,5}, { 6, 7, 8 }, { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 } };
 
         for(int i = 0; i <PosToCheck.Length; i ++ )
@@ -255,13 +260,11 @@ public class GameManager : MonoBehaviour
             }
             if(sum == 3)
             {
-                for (int x = 0; x < 3; x++)
-                {
-                    winsequence[i] = PosToCheck[i, x];
-                }
+                //Debug.Log("win");
+                return true;
             }
         }
-        return winsequence;
+        return false;
     }
 
 }

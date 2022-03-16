@@ -17,7 +17,7 @@ public class ButtonScript : MonoBehaviour
         if (GameManager.Instance.isPlayerTurn && textComp.text == " ")
         {
             textComp.text = "X";
-            GameManager.Instance.isPlayerTurn = !GameManager.Instance.isPlayerTurn;
+            GameManager.Instance.isPlayerTurn = false;
             if(GameManager.Instance.CheckWin("X"))
                 Debug.Log("Player Win"); ;
         }
