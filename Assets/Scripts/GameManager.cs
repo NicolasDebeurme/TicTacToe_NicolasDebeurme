@@ -19,7 +19,9 @@ public class GameManager : MonoBehaviour
 
     Text ButtonText;
 
-    public int difficulty = 10;
+    public int difficulty;
+
+    char[] testgrid = new char[] { 'O', ' ', ' ', ' ',' ',' ','O',' ','O'};
 
     private void Awake()
     {
@@ -28,9 +30,12 @@ public class GameManager : MonoBehaviour
     }
     void Start()
     {
+        difficulty = 5;
+
         GenerateGrid();
 
         ButtonText = ButtonPrefab.GetComponentInChildren<Text>();
+
     }
 
 
@@ -39,7 +44,10 @@ public class GameManager : MonoBehaviour
 
         if (!isPlayerTurn)
         {
+            isPlayerTurn = true;
+
             makeAiMove();
+            
         }
  
     }
@@ -120,7 +128,7 @@ public class GameManager : MonoBehaviour
 
     public void makeAiMove()
     {
-        isPlayerTurn = true;
+        
         int bestVal = -11;
         int bestMove= -1;
         char[] newBoard = new char[9];
@@ -139,7 +147,6 @@ public class GameManager : MonoBehaviour
             {
                 newBoard[i] = 'O';
                 int value = Minimax(newBoard, difficulty, false);
-                //Debug.Log(value);
                 if (value > bestVal)
                 {
                     bestVal = value;
@@ -174,10 +181,8 @@ public class GameManager : MonoBehaviour
     int Minimax(char[] board,  int depth , bool maximizingPlayer)
     {
         int score = scoreBoard(board, depth);
-        //Debug.Log(score+"-"+ isTerminating(board)+"-"+ depth);
         if (depth == 0 || isTerminating(board) || score != 0)
         {
-            Debug.Log(score);
             return score;
         }
         if (maximizingPlayer)
@@ -217,8 +222,6 @@ public class GameManager : MonoBehaviour
         string currentPlayer = "O";
         for(int j = 0; j < 2; j++)
         {
-            for (int i = 0; i < 4; i++)
-            {
                 if (CheckArrayWin(board, char.Parse(currentPlayer)))
                 {
                     if (currentPlayer == "O")
@@ -226,7 +229,6 @@ public class GameManager : MonoBehaviour
                     else
                         return -10 + (difficulty - depth);
                 }
-            }
             currentPlayer = "X";
         }
         
@@ -245,13 +247,13 @@ public class GameManager : MonoBehaviour
 
     bool CheckArrayWin(char[] board , char player )
     {
-        int[,] PosToCheck = new int[,]{ { 0, 1, 2 }, { 3, 4 ,5}, { 6, 7, 8 }, { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 } };
+        int[,] PosToCheck = new int[,]{ { 0, 1, 2 }, { 3, 4 ,5}, { 6, 7, 8 }, { 0, 3, 6 }, { 1, 4, 7 }, { 2, 5, 8 } , { 0, 4, 8 }, { 2, 4, 6 } };
 
-        for(int i = 0; i <PosToCheck.Length; i ++ )
+        for(int i = 0; i <8; i ++ )
         {
             int sum = 0;
 
-            for(int j = 0;i<3;i++)
+            for(int j = 0;j<3;j++)
             {
                 if(board[PosToCheck[i, j]] == player)
                 {
